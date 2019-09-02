@@ -14,6 +14,10 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
+app.get('/urls/new', (req, res) => {
+  res.render('urls_new');
+});
+
 /**
  * Whatever you type in using the path /urls/yourURL will be dynamic
  * so req.params.shortURL will be whatever you type in, and it is a string
@@ -25,6 +29,7 @@ app.get('/urls/:shortURL', (req, res) => {
   let templateVars = { shortURL, longURL };
   res.render('urls_show', templateVars);
 });
+
 
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
