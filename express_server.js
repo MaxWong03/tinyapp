@@ -2,11 +2,13 @@ const express = require('express');
 const app = express();
 const PORT = 8080;
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 
 //set the view engine to ejs
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(morgan('dev'));
 
 
 //taken from  //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -56,11 +58,11 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls'); //redirect the client back to the url_index page
 });
 
-app.post('/urls/:shortURL', (req,res) => {
+app.post('/urls/:shortURL', (req,res) => { //when user click edit in index page
   res.redirect(`/urls/${req.params.shortURL}`);
 });
 
-app.post('/urls/:shortURL/edit', (req, res) => {
+app.post('/urls/:shortURL/edit', (req, res) => {//routing the edit action (when user edit longurl of a correspond shorturl via submit)
   const newURL = req.body.updateURL;
   const shortURL = req.params.shortURL;
   urlDatabase[shortURL] = newURL;
