@@ -24,6 +24,22 @@ const urlDatabase = {
 };
 
 
+
+app.get('/urls', (req, res) => {
+  let templateVars = {urls: urlDatabase, username: req.cookies.username};
+  res.render('urls_index', templateVars);
+});
+
+app.get('/register', (req, res) => {
+  let templateVars = {urls: urlDatabase, username: req.cookies.username};
+  res.render('register', templateVars);
+});
+
+app.get('/urls/new', (req, res) => {
+  let templateVars = {urls: urlDatabase, username: req.cookies.username};
+  res.render('urls_new', templateVars);
+});
+
 app.post('/login', (req, res) => {
   const username = req.body.username;
   res.cookie('username', username);
@@ -34,16 +50,6 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   res.clearCookie('username');
   res.redirect('urls');
-});
-
-app.get('/urls', (req, res) => {
-  let templateVars = {urls: urlDatabase, username: req.cookies.username};
-  res.render('urls_index', templateVars);
-});
-
-app.get('/urls/new', (req, res) => {
-  let templateVars = {urls: urlDatabase, username: req.cookies.username};
-  res.render('urls_new', templateVars);
 });
 
 app.post('/urls', (req, res) => {
@@ -65,6 +71,12 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL];
+  res.redirect(longURL);
+});
+
 app.post('/urls/:shortURL/delete', (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect('/urls'); //redirect the client back to the url_index page
@@ -82,11 +94,6 @@ app.post('/urls/:shortURL/edit', (req, res) => {//routing the edit action (when 
 });
 
 
-app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
-  const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
-  res.redirect(longURL);
-});
 
 
 
