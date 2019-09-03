@@ -60,6 +60,14 @@ app.post('/urls/:shortURL', (req,res) => {
   res.redirect(`/urls/${req.params.shortURL}`);
 });
 
+app.post('/urls/:shortURL/edit', (req, res) => {
+  const newURL = req.body.updateURL;
+  const shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = newURL;
+  res.redirect('/urls');
+});
+
+
 app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
