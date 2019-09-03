@@ -5,17 +5,22 @@ const app = express();
 const PORT = 8080;
 const cookieParser = require('cookie-parser');
 
-
 //set the view engine to ejs
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(morgan('dev'));
 app.use(cookieParser());
-
 
 //taken from  //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 const generateRandomString = () => {
   return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5).toUpperCase();
+};
+
+const findUserByEmail = (userObj, userEmail) => {
+  for (let user in userObj) {
+    if (userObj[user].email === userEmail) return true;
+  }
+  return false;
 };
 
 const urlDatabase = {
@@ -23,20 +28,31 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-
+const user = {
+  // "userRandomID": {
+  //   id: "userRandomID",
+  //   email: "user@example.com",
+  //   password: "purple-monkey-dinosaur"
+  // },
+  // "user2RandomID": {
+  //   id: "user2RandomID",
+  //   email: "user2@example.com",
+  //   password: "dishwasher-funk"
+  // }
+};
 
 app.get('/urls', (req, res) => {
-  let templateVars = {urls: urlDatabase, username: req.cookies.username};
+  let templateVars = { urls: urlDatabase, user };
   res.render('urls_index', templateVars);
 });
 
 app.get('/register', (req, res) => {
-  let templateVars = {urls: urlDatabase, username: req.cookies.username};
+  let templateVars = { urls: urlDatabase, user };
   res.render('register', templateVars);
 });
 
 app.get('/urls/new', (req, res) => {
-  let templateVars = {urls: urlDatabase, username: req.cookies.username};
+  let templateVars = { urls: urlDatabase, user };
   res.render('urls_new', templateVars);
 });
 
@@ -44,12 +60,27 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   res.cookie('username', username);
   res.redirect('/urls');
-  
+
 });
 
 app.post('/logout', (req, res) => {
   res.clearCookie('username');
   res.redirect('urls');
+});
+
+app.post('/register', (req, res) => {
+  const email = req.body.email;
+  if (email === '') {
+    res.status(400).end();
+  } else if (findUserByEmail(user, email)) {
+    res.status(400).end();
+  } else {
+    const password = req.body.password;
+    const id = generateRandomString();
+    user[id] = {id, email, password};
+    res.cookie(`user_${id}`,id);
+    res.redirect('/urls');
+  }
 });
 
 app.post('/urls', (req, res) => {
@@ -67,7 +98,7 @@ app.post('/urls', (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
-  let templateVars = { shortURL, longURL , username: req.cookies.username};
+  let templateVars = { shortURL, longURL, user };
   res.render('urls_show', templateVars);
 });
 
@@ -82,7 +113,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls'); //redirect the client back to the url_index page
 });
 
-app.post('/urls/:shortURL', (req,res) => { //when user click edit in index page
+app.post('/urls/:shortURL', (req, res) => { //when user click edit in index page
   res.redirect(`/urls/${req.params.shortURL}`);
 });
 
