@@ -28,7 +28,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-const user = {
+const users = {
   // "userRandomID": {
   //   id: "userRandomID",
   //   email: "user@example.com",
@@ -42,17 +42,22 @@ const user = {
 };
 
 app.get('/urls', (req, res) => {
-  let templateVars = { urls: urlDatabase, user };
+  const userID = req.cookies['user_id'];
+  console.log(userID);
+  console.log(users[userID]);
+  let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('urls_index', templateVars);
 });
 
 app.get('/register', (req, res) => {
-  let templateVars = { urls: urlDatabase, user };
+  const userID = req.cookies['user_id'];
+  let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('register', templateVars);
 });
 
 app.get('/urls/new', (req, res) => {
-  let templateVars = { urls: urlDatabase, user };
+  const userID = req.cookies['user_id'];
+  let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('urls_new', templateVars);
 });
 
@@ -64,7 +69,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('userid');
   res.redirect('urls');
 });
 
@@ -72,13 +77,13 @@ app.post('/register', (req, res) => {
   const email = req.body.email;
   if (email === '') {
     res.status(400).end();
-  } else if (findUserByEmail(user, email)) {
+  } else if (findUserByEmail(users, email)) {
     res.status(400).end();
   } else {
     const password = req.body.password;
     const id = generateRandomString();
-    user[id] = {id, email, password};
-    res.cookie(`user_${id}`,id);
+    users[id] = {id, email, password};
+    res.cookie(`user_id`,id);
     res.redirect('/urls');
   }
 });
@@ -98,7 +103,8 @@ app.post('/urls', (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
-  let templateVars = { shortURL, longURL, user };
+  const userID = req.cookies['user_id'];
+  let templateVars = { shortURL, longURL, user: users[userID] };
   res.render('urls_show', templateVars);
 });
 
