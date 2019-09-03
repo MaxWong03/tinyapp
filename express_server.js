@@ -8,6 +8,12 @@ const bodyParser = require('body-parser');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 
+
+//taken from  //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+const generateRandomString = () => {
+  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
