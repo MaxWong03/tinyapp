@@ -21,6 +21,11 @@ app.get('/urls/new', (req, res) => {
   res.render('urls_new');
 });
 
+app.post('/urls', (req, res) => {
+  console.log(req.body);
+  res.send('ok');
+});
+
 /**
  * Whatever you type in using the path /urls/yourURL will be dynamic
  * so req.params.shortURL will be whatever you type in, and it is a string
