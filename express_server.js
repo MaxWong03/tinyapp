@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 //set the view engine to ejs
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(cookieParser());
 
 
@@ -23,6 +23,13 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+
+app.post('/login', (req, res) => {
+  const username = req.body.username;
+  res.cookie('username', username);
+  res.redirect('/urls');
+
+});
 
 app.get('/urls', (req, res) => {
   let templateVars = {urls: urlDatabase};
