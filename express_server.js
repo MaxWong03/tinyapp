@@ -1,14 +1,16 @@
 const express = require('express');
-const app = express();
-const PORT = 8080;
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const app = express();
+const PORT = 8080;
+const cookieParser = require('cookie-parser');
 
 
 //set the view engine to ejs
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 
 //taken from  //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -16,14 +18,11 @@ const generateRandomString = () => {
   return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5).toUpperCase();
 };
 
-
-
-
-
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
 
 app.get('/urls', (req, res) => {
   let templateVars = {urls: urlDatabase};
