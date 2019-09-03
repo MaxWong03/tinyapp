@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //taken from  //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 const generateRandomString = () => {
-  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5).toUpperCase();
 };
 
 const urlDatabase = {
@@ -28,8 +28,10 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  console.log(req.body);
-  res.send('ok');
+  const shortURL = generateRandomString();
+  const longURL = req.body.longURL;
+  urlDatabase[shortURL] = longURL;
+  res.redirect(`/urls/${shortURL}`);
 });
 
 /**
@@ -44,6 +46,11 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+app.get('/u/:shortURL', (req, res) => { //redirecting
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL];
+  res.redirect(longURL);
+});
 
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
