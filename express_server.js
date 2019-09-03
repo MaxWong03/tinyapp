@@ -56,6 +56,10 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls'); //redirect the client back to the url_index page
 });
 
+app.post('/urls/:shortURL', (req,res) => {
+  res.redirect(`/urls/${req.params.shortURL}`);
+});
+
 app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
