@@ -2,6 +2,32 @@ const {bodyParser, morgan, app, PORT, cookieParser, generateRandomString, getUse
 = require('./constants');
 
 
+/**
+ * 3)
+ * Return an object with key being shortURL
+ * The value of key is one that the userID matches with the input id
+ * just a regular object, instead of obj within an obj like the new url database
+ * 
+ * @param {String} id //the cookie of the logged in user
+ * @return {Object} urls 
+ * urls = {
+ *  shortURL: longURL *probably have to filter out the userID key value pair
+ * }
+ * 
+ * Note:
+ * 1) Use in urls_index
+ * 2) Simple unit test shows this function returns the correct urlsForUser
+ * 3) Could possibly refactor in constants and export out
+ */
+const urlsForUser = (id, urlDatabase) => {
+  const userURL = {};
+  for (let shortURL in urlDatabase) {
+    const shortURLInfo = urlDatabase[shortURL];
+    if (shortURLInfo.userID === id) userURL[shortURL] = shortURLInfo.longURL;
+  }
+  return userURL;
+};
+
 //server engine set up
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,7 +69,8 @@ app.get('/reg_fail', (req, res) => {
 app.get('/urls/new', (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlDatabase, user: users[userID] };
-  res.render('urls_new', templateVars);
+  if (!userID) res.redirect('/login');
+  else res.render('urls_new', templateVars);
 });
 
 app.get('/urls/:shortURL', (req, res) => {
@@ -63,9 +90,10 @@ app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
 
 //POST requests routes
 app.post('/urls', (req, res) => {
+  // const userID = req.cookies['user_id']; //2)
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  // urlDatabase[shortURL] = {longURL, userID}; //2)
   res.redirect(`/urls/${shortURL}`);
 });
 
