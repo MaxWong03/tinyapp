@@ -28,6 +28,12 @@ app.get('/register', (req, res) => {
   res.render('register', templateVars);
 });
 
+app.get('/reg_fail', (req, res) => {
+  const userID = req.cookies['user_id'];
+  let templateVars = { urls: urlDatabase, user: users[userID] };
+  res.render('reg_fail', templateVars);
+});
+
 app.get('/urls/new', (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlDatabase, user: users[userID] };
@@ -77,9 +83,9 @@ app.post('/logout', (req, res) => {
 app.post('/register', (req, res) => {
   const email = req.body.email;
   if (email === '') {
-    res.status(400).end();
+    res.status(400).redirect('/reg_fail');
   } else if (getUserByEmail(users, email)) {
-    res.status(400).end();
+    res.status(400).redirect('/reg_fail');
   } else {
     const password = req.body.password;
     const id = generateRandomString();
