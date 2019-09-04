@@ -42,9 +42,8 @@ const users = {
 };
 
 app.get('/urls', (req, res) => {
+  console.log(req.cookies['user_id']);
   const userID = req.cookies['user_id'];
-  console.log(userID);
-  console.log(users[userID]);
   let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('urls_index', templateVars);
 });
@@ -53,6 +52,12 @@ app.get('/register', (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('register', templateVars);
+});
+
+app.get('/login', (req, res) => {
+  const userID = req.cookies['user_id'];
+  let templateVars = { urls: urlDatabase, user: users[userID] };
+  res.render('login', templateVars);
 });
 
 app.get('/urls/new', (req, res) => {
