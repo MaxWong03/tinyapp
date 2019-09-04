@@ -34,11 +34,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(morgan('dev'));
 app.use(cookieParser());
 
+app.get('/invalid_delete', (req, res) => {
+  const userID = req.cookies['user_id'];
+  let templateVars = { urls: urlDatabase, user: users[userID] };
+  res.render('invalid_delete', templateVars);
+});
 
-//GET Requests Routes
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
-  let templateVars = { urls: urlsForUser(userID, urlDatabase), user: users[userID] };
+  let templateVars = { urls: urlsForUser(userID, urlDatabase), user: users[userID]};
   res.render('urls_index', templateVars);
 });
 
@@ -69,7 +73,7 @@ app.get('/reg_fail', (req, res) => {
 app.get('/urls/new', (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlDatabase, user: users[userID] };
-  if (!userID) res.redirect('/login');
+  if (!users[userID]) res.redirect('/login');
   else res.render('urls_new', templateVars);
 });
 
@@ -139,8 +143,13 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect('/urls'); //redirect the client back to the url_index page
+  const userID = req.cookies['user_id'];
+  const shortURL = req.params.shortURL;
+  const shortURLOwner = urlDatabase[shortURL].userID;
+  if (userID === shortURLOwner) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect('/urls'); //redirect the client back to the url_index page
+  } else res.redirect('/invalid_delete');
 });
 
 app.post('/urls/:shortURL/edit', (req, res) => {//routing the edit action (when user edit longurl of a correspond shorturl via submit)
