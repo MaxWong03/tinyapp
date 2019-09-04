@@ -1,43 +1,5 @@
-const {bodyParser, morgan, app, PORT, cookieParser, generateRandomString, getUserByEmail, urlDatabase, users}
+const {bodyParser, morgan, app, PORT, cookieParser, generateRandomString, getUserByEmail, urlDatabase, users, bcrypt, urlsForUser, isValidUser}
 = require('./constants');
-
-
-/**
- * 3)
- * Return an object with key being shortURL
- * The value of key is one that the userID matches with the input id
- * just a regular object, instead of obj within an obj like the new url database
- * 
- * @param {String} id //the cookie of the logged in user
- * @return {Object} urls 
- * urls = {
- *  shortURL: longURL *probably have to filter out the userID key value pair
- * }
- * 
- * Note:
- * 1) Use in urls_index
- * 2) Simple unit test shows this function returns the correct urlsForUser
- * 3) Could possibly refactor in constants and export out
- * 
- * GOOD TO GO FOR REFACTOR
- */
-const urlsForUser = (id, urlDatabase) => {
-  const userURL = {};
-  for (let shortURL in urlDatabase) {
-    const shortURLInfo = urlDatabase[shortURL];
-    if (shortURLInfo.userID === id) userURL[shortURL] = shortURLInfo.longURL;
-  }
-  return userURL;
-};
-
-//Good to go for refactor
-const isValidUser = (req, urlDatabase) => {
-  const userID = req.cookies['user_id'];
-  const shortURL = req.params.shortURL;
-  const shortURLOwner = urlDatabase[shortURL].userID;
-  if (userID === shortURLOwner) return true;
-  return false;
-};
 
 //server engine set up
 app.set('view engine', 'ejs');
@@ -93,15 +55,6 @@ app.get('/urls/new', (req, res) => {
   else res.render('urls_new', templateVars);
 });
 
-
-/**
- * 
- * This is what i was working at
- * What im trying to accompliush is that if the user access a url/:id http://localhost:8080/urls/ngpYKL
- * when they are not logged in yet, tell them to log in (probably use cookie)
- * and if they are logged in but trying to access a key that doesnt belong to them, tell them to f off
- * 
- */
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL].longURL;
@@ -130,8 +83,10 @@ app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   let user = getUserByEmail(users, email);
+  console.log('typed:', password);
+  console.log('hash:', user.password);
   if (!user) res.status(403).redirect('/login_fail');
-  else if (user.password !== password) res.status(403).redirect('/login_fail');
+  else if (!bcrypt.compareSync(password,user.password)) res.status(403).redirect('/login_fail');
   else {
     res.cookie('user_id', user.id);
     res.redirect('urls');
@@ -150,9 +105,10 @@ app.post('/register', (req, res) => {
   } else if (getUserByEmail(users, email)) {
     res.status(400).redirect('/reg_fail');
   } else {
-    const password = req.body.password;
+    const password = bcrypt.hashSync(req.body.password, 10);
     const id = generateRandomString();
     users[id] = {id, email, password};
+    console.log(users);
     res.cookie(`user_id`,id);
     res.redirect('/urls');
   }
