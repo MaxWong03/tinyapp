@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const app = express();
 const PORT = 8080;
 const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 
 const generateRandomString = () => {
@@ -65,5 +66,6 @@ module.exports = {
   users,
   bcrypt,
   urlsForUser,
-  isValidUser
+  isValidUser,
+  cookieSession
 };
