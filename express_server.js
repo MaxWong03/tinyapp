@@ -16,13 +16,6 @@ const generateRandomString = () => {
   return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5).toUpperCase();
 };
 
-const findUserByEmail = (userObj, userEmail) => {
-  for (let user in userObj) {
-    if (userObj[user].email === userEmail) return true;
-  }
-  return false;
-};
-
 const getUserByEmail = (userObj, userEmail) => {
   for (let user in userObj) {
     if (userObj[user].email === userEmail) return userObj[user];
@@ -55,7 +48,6 @@ app.get('/', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
-  console.log('user:', users[userID]);
   let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('urls_index', templateVars);
 });
@@ -82,7 +74,7 @@ app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   let user = getUserByEmail(users, email);
-  if (!findUserByEmail(users, email)) res.status(403).end();
+  if (!user) res.status(403).end();
   else if (user.password !== password) res.status(403).end();
   else {
     res.cookie('user_id', user.id);
@@ -99,7 +91,7 @@ app.post('/register', (req, res) => {
   const email = req.body.email;
   if (email === '') {
     res.status(400).end();
-  } else if (findUserByEmail(users, email)) {
+  } else if (getUserByEmail(users, email)) {
     res.status(400).end();
   } else {
     const password = req.body.password;
