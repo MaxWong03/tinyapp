@@ -75,7 +75,7 @@ app.get('/urls/new', (req, res) => {
 
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
+  const longURL = urlDatabase[shortURL].longURL;
   const userID = req.cookies['user_id'];
   let templateVars = { shortURL, longURL, user: users[userID] };
   res.render('urls_show', templateVars);
@@ -90,10 +90,10 @@ app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
 
 //POST requests routes
 app.post('/urls', (req, res) => {
-  // const userID = req.cookies['user_id']; //2)
+  const userID = req.cookies['user_id']; //2)
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  // urlDatabase[shortURL] = {longURL, userID}; //2)
+  urlDatabase[shortURL] = {longURL, userID}; //2)
   res.redirect(`/urls/${shortURL}`);
 });
 
