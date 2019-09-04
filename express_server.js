@@ -55,6 +55,7 @@ app.get('/', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
+  console.log('user:', users[userID]);
   let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('urls_index', templateVars);
 });
@@ -84,14 +85,12 @@ app.post('/login', (req, res) => {
   if (!findUserByEmail(users, email)) res.status(403).end();
   else if (user.password !== password) res.status(403).end();
   else {
-    const userID = generateRandomString();
-    res.cookie('user_id', userID);
+    res.cookie('user_id', user.id);
     res.redirect('urls');
   }
 });
 
 app.post('/logout', (req, res) => {
-  console.log('deso it route logout');
   res.clearCookie('user_id');
   res.redirect('urls');
 });
