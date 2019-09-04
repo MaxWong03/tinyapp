@@ -1,27 +1,27 @@
 <header>
-  <nav class="navbar navbar-expand-md navbar-dark bg-success">
-    <a class="navbar-brand" href="/urls">TinyApp</a>
+  <nav class="navbar navbar-expand-md navbar-dark bg-success pb-3">
+    <a class="navbar-brand font-weight-bold" href="/urls"><h3 class="font-weight-bold mt-2 ">TinyApp</h3></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
       aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+      <div class="navbar-nav font-weight-bold">
+        <a class="nav-item nav-link font-weight-bold" href="/urls"><h3 class="font-weight-bold mt-2 ml-1">My URLs</h3></a>
+        <a class="nav-item nav-link font-weight-bold" href="/urls/new"><h3 class="font-weight-bold mt-2 ml-1">Create New URL</h3></a>
       </div>
       <% if (user) { %>
         <form class="form-inline align-items-baseline" action="/logout" method="POST">
-          <h6 class="mr-3">Logged In As: <%= user.email %></h6>
-        <button type="submit" class="btn btn-primary">Logout</button>
+          <h6 class="mr-3 text-white">Logged In As: <%= user.email %></h6>
+        <button type="submit" class="btn btn-info font-weight-bold">Logout</button>
         </form>
       <% } else { %>
         <div class="navbar-nav">
           <form class="mr-3" action="/login" method="GET">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-outline-light  font-weight-bold mt-1"><h3>Login</h3></button>
           </form>
           <form class="" action="/register" method="GET">
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-outline-light  font-weight-bold mt-1"><h3>Register</h3></button>
           </form>
         </div>
      <% } %>
