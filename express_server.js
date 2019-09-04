@@ -18,6 +18,8 @@ const {bodyParser, morgan, app, PORT, cookieParser, generateRandomString, getUse
  * 1) Use in urls_index
  * 2) Simple unit test shows this function returns the correct urlsForUser
  * 3) Could possibly refactor in constants and export out
+ * 
+ * GOOD TO GO FOR REFACTOR
  */
 const urlsForUser = (id, urlDatabase) => {
   const userURL = {};
@@ -26,6 +28,15 @@ const urlsForUser = (id, urlDatabase) => {
     if (shortURLInfo.userID === id) userURL[shortURL] = shortURLInfo.longURL;
   }
   return userURL;
+};
+
+//Good to go for refactor
+const isValidUser = (req, urlDatabase) => {
+  const userID = req.cookies['user_id'];
+  const shortURL = req.params.shortURL;
+  const shortURLOwner = urlDatabase[shortURL].userID;
+  if (userID === shortURLOwner) return true;
+  return false;
 };
 
 //server engine set up
@@ -40,12 +51,17 @@ app.get('/invalid_delete', (req, res) => {
   res.render('invalid_delete', templateVars);
 });
 
+app.get('/invalid_edit', (req, res) => {
+  const userID = req.cookies['user_id'];
+  let templateVars = { urls: urlDatabase, user: users[userID] };
+  res.render('invalid_edit', templateVars);
+});
+
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlsForUser(userID, urlDatabase), user: users[userID]};
   res.render('urls_index', templateVars);
 });
-
 app.get('/login', (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlDatabase, user: users[userID] };
@@ -143,20 +159,19 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
-  const userID = req.cookies['user_id'];
-  const shortURL = req.params.shortURL;
-  const shortURLOwner = urlDatabase[shortURL].userID;
-  if (userID === shortURLOwner) {
+  if (isValidUser(req,urlDatabase)) {
     delete urlDatabase[req.params.shortURL];
     res.redirect('/urls'); //redirect the client back to the url_index page
   } else res.redirect('/invalid_delete');
 });
 
 app.post('/urls/:shortURL/edit', (req, res) => {//routing the edit action (when user edit longurl of a correspond shorturl via submit)
-  const newURL = req.body.updateURL;
-  const shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = newURL;
-  res.redirect('/urls');
+  if (isValidUser(req, urlDatabase)) {
+    const newURL = req.body.updateURL;
+    const shortURL = req.params.shortURL;
+    urlDatabase[shortURL].longURL = newURL;
+    res.redirect('/urls');
+  } else res.redirect('/invalid_edit');
 });
 
 app.post('/urls/:shortURL', (req, res) => { //when user click edit in index page
