@@ -23,23 +23,35 @@ const findUserByEmail = (userObj, userEmail) => {
   return false;
 };
 
+const getUserByEmail = (userObj, userEmail) => {
+  for (let user in userObj) {
+    if (userObj[user].email === userEmail) return userObj[user];
+  }
+  return false;
+};
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
 const users = {
-  // "userRandomID": {
-  //   id: "userRandomID",
-  //   email: "user@example.com",
-  //   password: "purple-monkey-dinosaur"
-  // },
-  // "user2RandomID": {
-  //   id: "user2RandomID",
-  //   email: "user2@example.com",
-  //   password: "dishwasher-funk"
-  // }
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
 };
+
+app.get('/', (req, res) => {
+  res.clearCookie('user_id');
+  res.redirect('/urls');
+});
 
 app.get('/urls', (req, res) => {
   console.log(req.cookies['user_id']);
@@ -67,10 +79,16 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const username = req.body.username;
-  res.cookie('username', username);
-  res.redirect('/urls');
-
+  const email = req.body.email;
+  const password = req.body.password;
+  let user = getUserByEmail(users, email);
+  if (!findUserByEmail(users, email)) res.status(403).end();
+  else if (user.password !== password) res.status(403).end();
+  else {
+    const userID = generateRandomString();
+    res.cookie('user_id', userID);
+    res.redirect('urls');
+  }
 });
 
 app.post('/logout', (req, res) => {
