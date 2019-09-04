@@ -1,45 +1,10 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const app = express();
-const PORT = 8080;
-const cookieParser = require('cookie-parser');
+const {bodyParser, morgan, app, PORT, cookieParser, generateRandomString, getUserByEmail, urlDatabase, users}
+= require('./constants');
 
-//set the view engine to ejs
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(morgan('dev'));
 app.use(cookieParser());
-
-//taken from  //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-const generateRandomString = () => {
-  return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5).toUpperCase();
-};
-
-const getUserByEmail = (userObj, userEmail) => {
-  for (let user in userObj) {
-    if (userObj[user].email === userEmail) return userObj[user];
-  }
-  return false;
-};
-
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
-
-const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  }
-};
 
 app.get('/', (req, res) => {
   res.clearCookie('user_id');
@@ -109,11 +74,6 @@ app.post('/urls', (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-/**
- * Whatever you type in using the path /urls/yourURL will be dynamic
- * so req.params.shortURL will be whatever you type in, and it is a string
- * that allows you to take that string and search it into the urlDatabase object to access the long url that the shorturl is associated to
- */
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
@@ -143,10 +103,6 @@ app.post('/urls/:shortURL/edit', (req, res) => {//routing the edit action (when 
   urlDatabase[shortURL] = newURL;
   res.redirect('/urls');
 });
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
