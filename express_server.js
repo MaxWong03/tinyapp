@@ -38,7 +38,8 @@ app.use(cookieParser());
 //GET Requests Routes
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
-  let templateVars = { urls: urlDatabase, user: users[userID] };
+  console.log(urlsForUser(userID, urlDatabase));
+  let templateVars = { urls: urlsForUser(userID, urlDatabase), user: users[userID] };
   res.render('urls_index', templateVars);
 });
 
@@ -83,7 +84,7 @@ app.get('/urls/:shortURL', (req, res) => {
 
 app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
   const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
+  const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
 

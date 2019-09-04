@@ -19,7 +19,7 @@
     <% for(let url in urls) { %>
     <tr class="bg-info">
       <td class="font-weight-bold text-center"><%= url %></td>
-      <td class="font-weight-bold text-center"><%= urls[url].longURL %></td>
+      <td class="font-weight-bold text-center"><%= urls[url] %></td>
       <td>
         <form class="text-center" method="POST" action="/urls/<%= url %>">
           <button type="submit" class="btn btn-outline-light font-weight-bold">Edit</button>
