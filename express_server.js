@@ -22,6 +22,12 @@ app.get('/login', (req, res) => {
   res.render('login', templateVars);
 });
 
+app.get('/login_fail', (req, res) => {
+  const userID = req.cookies['user_id'];
+  let templateVars = { urls: urlDatabase, user: users[userID] };
+  res.render('login_fail', templateVars);
+});
+
 app.get('/register', (req, res) => {
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlDatabase, user: users[userID] };
@@ -67,8 +73,8 @@ app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   let user = getUserByEmail(users, email);
-  if (!user) res.status(403).end();
-  else if (user.password !== password) res.status(403).end();
+  if (!user) res.status(403).redirect('/login_fail');
+  else if (user.password !== password) res.status(403).redirect('/login_fail');
   else {
     res.cookie('user_id', user.id);
     res.redirect('urls');

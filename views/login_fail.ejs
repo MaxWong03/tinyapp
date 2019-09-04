@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <title>Login - TinyApp</title>
+</head>
+
+<body>
+  <% include ./partials/_header %>
+  <div class="alert alert-danger " role="alert">
+    <h4 class="alert-heading text-center">Error Code: 403 - Forbidden</h4>
+    <p class="text-center">INVALID EMAIL OR INVALID PASSWORD</p>
+  </div>
+  <% include ./partials/_login %>
+</body>
+
+</html>
