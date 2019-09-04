@@ -54,7 +54,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  console.log(req.cookies['user_id']);
   const userID = req.cookies['user_id'];
   let templateVars = { urls: urlDatabase, user: users[userID] };
   res.render('urls_index', templateVars);
@@ -92,7 +91,8 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('userid');
+  console.log('deso it route logout');
+  res.clearCookie('user_id');
   res.redirect('urls');
 });
 
