@@ -1,0 +1,18 @@
+<div class="card-footer text-muted text-center">
+  <div class=""></div>
+  <div class="card-body">
+    <h3 class="text-info font-weight-bold mt-4">TinyURL for: <%= longURL %></h3>
+    <h5 class="card-text text-info font-weight-bold">Short URL: <a class="text-danger" href="/u/<%= shortURL %>"><%= shortURL %></a></h5>
+  </div>
+  <div class="">
+    <h2 class="text-info mt-4">Edit</h2>
+    <form class="form-inline justify-content-center" method="POST" action="/urls/<%= shortURL %>/edit">
+      <div class="form-group mb-2">
+        <label class="font-weight-bold text-info" for="updateURL">New URL:</label>
+        <input class="form-control" type="text" name="updateURL" placeholder="http://"
+          style="width: 300px; margin: 1em">
+        <button type="submit" class="btn btn-info">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

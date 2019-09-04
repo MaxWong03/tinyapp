@@ -10,24 +10,14 @@
 
 <body>
   <% include ./partials/_header %>
-  <div class="card-footer text-muted text-center">
-    <div class=""></div>
-    <div class="card-body">
-      <h3 class="text-info font-weight-bold mt-4">TinyURL for: <%= longURL %></h3>
-      <h5 class="card-text text-info font-weight-bold">Short URL: <a class="text-danger" href="/u/<%= shortURL %>"><%= shortURL %></a></h5>
+  <% if(!user) { %>
+    <div class="alert alert-warning " role="alert">
+      <h4 class="display-4 font-weight-bold mt-2 mb-4 alert-heading text-center">LOGIN TO ACCESS SHORT URLS</h4>
+      <h4 class="font-weight-bold text-center">ITS RIGHT THERE IN CASE YOU WERE WONDERING ↗️↗️↗️</h4>
     </div>
-    <div class="">
-      <h2 class="text-info mt-4">Edit</h2>
-      <form class="form-inline justify-content-center" method="POST" action="/urls/<%= shortURL %>/edit">
-        <div class="form-group mb-2">
-          <label class="font-weight-bold text-info" for="updateURL">New URL:</label>
-          <input class="form-control" type="text" name="updateURL" placeholder="http://"
-            style="width: 300px; margin: 1em">
-          <button type="submit" class="btn btn-info">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  <% } else { %>
+    <% include ./partials/_show %>
+  <% } %>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

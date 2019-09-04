@@ -38,7 +38,6 @@ app.use(cookieParser());
 //GET Requests Routes
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
-  console.log(urlsForUser(userID, urlDatabase));
   let templateVars = { urls: urlsForUser(userID, urlDatabase), user: users[userID] };
   res.render('urls_index', templateVars);
 });
@@ -74,6 +73,15 @@ app.get('/urls/new', (req, res) => {
   else res.render('urls_new', templateVars);
 });
 
+
+/**
+ * 
+ * This is what i was working at
+ * What im trying to accompliush is that if the user access a url/:id http://localhost:8080/urls/ngpYKL
+ * when they are not logged in yet, tell them to log in (probably use cookie)
+ * and if they are logged in but trying to access a key that doesnt belong to them, tell them to f off
+ * 
+ */
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL].longURL;
