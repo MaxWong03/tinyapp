@@ -30,7 +30,6 @@ app.get('/invalid_edit', (req, res) => {
 app.get('/urls', (req, res) => {
   const userID = req.session.user_id;
   let templateVars = { urls: urlsForUser(userID, urlDatabase), user: users[userID]};
-  console.log(templateVars);
   res.render('urls_index', templateVars);
 });
 app.get('/login', (req, res) => {
