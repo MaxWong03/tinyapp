@@ -1,12 +1,12 @@
 <div class="card-footer text-muted text-center">
   <div class=""></div>
   <div class="card-body">
-    <h3 class="text-info font-weight-bold mt-4">TinyURL for: <%= longURL %></h3>
-    <h5 class="card-text text-info font-weight-bold">Short URL: <a class="text-danger" href="/u/<%= shortURL %>"><%= shortURL %></a></h5>
+    <h3 class="text-info font-weight-bold mt-4">TinyURL for: <%= urls[req.params.shortURL].longURL %></h3>
+    <h5 class="card-text text-info font-weight-bold">Short URL: <a class="text-danger" href="/u/<%= req.params.shortURL %>"><%= req.params.shortURL %></a></h5>
   </div>
   <div class="">
     <h2 class="text-info mt-4">Edit</h2>
-    <form class="form-inline justify-content-center" method="POST" action="/urls/<%= shortURL %>">
+    <form class="form-inline justify-content-center" method="POST" action="/urls/<%= req.params.shortURL %>">
       <div class="form-group mb-2">
         <label class="font-weight-bold text-info" for="updateURL">New URL:</label>
         <input class="form-control" type="text" name="updateURL" placeholder="http://"

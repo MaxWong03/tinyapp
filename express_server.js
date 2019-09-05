@@ -1,5 +1,5 @@
 const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession} = require('./constants');
-const {generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL} = require('./helperFunctions');
+const {generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL, renderHeader} = require('./helperFunctions');
 //server engine set up
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -8,86 +8,47 @@ app.use(cookieSession({
   keys: ['key1']
 }));
 
-
-
 app.get('/', (req, res) => {
   const userID = req.session.user_id;
-  if (userID) {
-    res.redirect('/urls');
-  } else res.redirect('/login');
+  if (userID) res.redirect('/urls');
+  else res.redirect('/login');
 });
 
-app.get('/invalid_delete', (req, res) => {
-  const userID = req.session.user_id;
-  let templateVars = { urls: urlDatabase, user: users[userID] };
-  res.render('invalid_delete', templateVars);
-});
+app.get('/invalid_delete', (req, res) => renderHeader(req, res, urlDatabase, users, 'invalid_delete'));
 
-app.get('/invalid_edit', (req, res) => {
-  const userID = req.session.user_id;
-  let templateVars = { urls: urlDatabase, user: users[userID] };
-  res.render('invalid_edit', templateVars);
-});
+app.get('/invalid_edit', (req, res) => renderHeader(req, res, urlDatabase, users, 'invalid_edit'));
 
-app.get('/urls', (req, res) => {
-  const userID = req.session.user_id;
-  let templateVars = { urls: urlsForUser(userID, urlDatabase), user: users[userID]};
-  res.render('urls_index', templateVars);
-});
-app.get('/login', (req, res) => {
-  const userID = req.session.user_id;
-  let templateVars = { urls: urlDatabase, user: users[userID] };
-  res.render('login', templateVars);
-});
+app.get('/urls', (req, res) => renderHeader(req, res, urlsForUser(req.session.user_id, urlDatabase), users, 'urls_index'));
 
-app.get('/login_fail', (req, res) => {
-  const userID = req.session.user_id;
-  let templateVars = { urls: urlDatabase, user: users[userID] };
-  res.render('login_fail', templateVars);
-});
+app.get('/login', (req, res) => renderHeader(req, res, urlDatabase, users, 'login'));
 
-app.get('/register', (req, res) => {
-  const userID = req.session.user_id;
-  let templateVars = { urls: urlDatabase, user: users[userID] };
-  res.render('register', templateVars);
-});
+app.get('/login_fail', (req, res) => renderHeader(req, res, urlDatabase, users, 'login_fail'));
 
-app.get('/reg_fail', (req, res) => {
-  const userID = req.session.user_id;
-  let templateVars = { urls: urlDatabase, user: users[userID] };
-  res.render('reg_fail', templateVars);
-});
+app.get('/register', (req, res) => renderHeader(req, res, urlDatabase, users, 'register'));
+
+app.get('/reg_fail', (req, res) => renderHeader(req, res, urlDatabase, users, 'reg_fail'));
 
 app.get('/urls/new', (req, res) => {
   const userID = req.session.user_id;
-  let templateVars = { urls: urlDatabase, user: users[userID] };
   if (!users[userID]) res.redirect('/login');
-  else res.render('urls_new', templateVars);
+  else renderHeader(req, res, urlDatabase, users, 'urls_new');
 });
 
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const userID = req.session.user_id;
-  const longURL = urlDatabase[shortURL].longURL;
-  if (invalidURL(shortURL, urlDatabase)) {
-    const userID = req.session.user_id;
-    let templateVars = { urls: urlDatabase, user: users[userID] };
-    res.render('invalid_short_url', templateVars);
-  }
-  let templateVars = { shortURL, longURL, user: users[userID] ,urlDatabase};
-  res.render('urls_show', templateVars);
+  if (invalidURL(shortURL, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_short_url');
+  else if (!isValidUser(req, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_edit');
+  else renderHeader(req, res, urlDatabase, users, 'urls_show');
 });
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-  const userID = req.session.user_id;
-  if (invalidURL(shortURL, urlDatabase)) {
-    const userID = req.session.user_id;
-    let templateVars = { urls: urlDatabase, user: users[userID] };
-    res.render('invalid_short_url', templateVars);
+  if (invalidURL(shortURL, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_short_url');
+  else {
+    const longURL = urlDatabase[shortURL].longURL;
+    res.redirect(longURL);
   }
-  const longURL = urlDatabase[shortURL].longURL;
-  res.redirect(longURL);
 });
 
 app.post('/urls', (req, res) => {

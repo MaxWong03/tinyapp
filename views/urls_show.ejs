@@ -15,7 +15,7 @@
       <h4 class="display-4 font-weight-bold mt-2 mb-4 alert-heading text-center">LOGIN TO ACCESS SHORT URLS</h4>
       <h4 class="font-weight-bold text-center">ITS RIGHT THERE IN CASE YOU WERE WONDERING ↗️↗️↗️</h4>
     </div>
-  <% } else if (user.id !== urlDatabase[shortURL].userID){ %>
+  <% } else if (user.id !== urls[req.params.shortURL].userID){ %>
     <div class="alert alert-danger " role="alert">
       <h4 class="display-4 font-weight-bold mt-2 mb-4 alert-heading text-center">WHY YOU TRYNA ACCESS OTHER PEOPLE'S STUFF 🤬</h4>
     </div>

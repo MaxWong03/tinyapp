@@ -33,10 +33,18 @@ const invalidURL = (url, urlDatabase) => {
   }
   return true;
 };
+
+const renderHeader = (req, res, urlDB, userDB, version) => {
+  const userID = req.session.user_id;
+  const templateVars = { urls: urlDB, user: userDB[userID], req, res};
+  res.render(`${version}`, templateVars);
+};
+
 module.exports = {
   generateRandomString,
   getUserByEmail,
   urlsForUser,
   isValidUser,
-  invalidURL
+  invalidURL,
+  renderHeader
 };
