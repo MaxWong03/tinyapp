@@ -8,6 +8,12 @@ app.use(cookieSession({
   keys: ['key1']
 }));
 
+app.get('/', (req, res) => {
+  const userID = req.session.user_id;
+  if (userID) {
+    res.redirect('/urls');
+  } else res.redirect('/login');
+});
 
 app.get('/invalid_delete', (req, res) => {
   const userID = req.session.user_id;
