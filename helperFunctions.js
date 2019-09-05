@@ -35,7 +35,7 @@ const invalidURL = (url, urlDatabase) => {
 
 const renderHeader = (req, res, urlDB, userDB, version) => {
   const userID = req.session.user_id;
-  const templateVars = { urls: urlDB, user: userDB[userID], req, res};
+  const templateVars = { urls: urlDB, user: userDB[userID], req, res };
   res.render(`${version}`, templateVars);
 };
 
@@ -55,10 +55,29 @@ const setCookieID = (req, res, id) => {
   res.redirect('urls');
 };
 
-const logOutAndClean = (res) => {
-  res.clearCookie('session');
+const logOutAndClean = (req, res) => {
+  req.session = null;
   res.redirect('urls');
 };
+
+// const handleShortURL = (urlDatabase, users) => {
+
+//   const middleWare = (req, res, next) => {
+//     //get Route
+//     const shortURL = req.params.shortURL;
+//     if (invalidURL(shortURL, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_short_url');
+//     else if (!isValidUser(req, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_edit');
+//     else renderHeader(req, res, urlDatabase, users, 'urls_show');
+//     //post route
+//     if (isValidUser(req, urlDatabase)) {
+//       const newURL = req.body.updateURL;
+//       const shortURL = req.params.shortURL;
+//       urlDatabase[shortURL].longURL = newURL;
+//       res.redirect('/urls');
+//     } else res.redirect('/invalid_edit');
+//   };
+//   return middleWare;
+// };
 
 module.exports = {
   generateRandomString,

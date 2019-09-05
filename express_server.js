@@ -69,7 +69,7 @@ app.post('/login', (req, res) => {
   else setCookieID(req, res, user.id);
 });
 
-app.post('/logout', (req, res) => logOutAndClean(res));
+app.post('/logout', (req, res) => logOutAndClean(req, res));
 
 app.post('/register', (req, res) => {
   const { email, password } = getCredential(req);
