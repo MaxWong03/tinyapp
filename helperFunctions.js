@@ -20,7 +20,7 @@ const urlsForUser = (id, urlDatabase) => {
 
 //Good to go for refactor
 const isValidUser = (req, urlDatabase) => {
-  const userID = req.cookies['user_id'];
+  const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
   const shortURLOwner = urlDatabase[shortURL].userID;
   if (userID === shortURLOwner) return true;
