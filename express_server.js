@@ -1,6 +1,5 @@
-const {bodyParser, morgan, app, PORT, cookieParser, generateRandomString, getUserByEmail, urlDatabase, users, bcrypt, urlsForUser, isValidUser, cookieSession}
-= require('./constants');
-
+const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession} = require('./constants');
+const {generateRandomString, getUserByEmail, urlsForUser, isValidUser} = require('./helperFunctions');
 //server engine set up
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
