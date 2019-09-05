@@ -7,8 +7,6 @@ app.use(cookieSession({
   name: 'session',
   keys: ['key1']
 }));
-// app.use(morgan('dev'));
-// app.use(cookieParser());
 
 
 app.get('/invalid_delete', (req, res) => {
@@ -67,19 +65,17 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
-app.get('/u/:shortURL', (req, res) => { //redirecting to longURL
+app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
 
-
-//POST requests routes
 app.post('/urls', (req, res) => {
-  const userID = req.session.user_id; //2)
+  const userID = req.session.user_id;
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = {longURL, userID}; //2)
+  urlDatabase[shortURL] = {longURL, userID};
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -120,11 +116,11 @@ app.post('/register', (req, res) => {
 app.post('/urls/:shortURL/delete', (req, res) => {
   if (isValidUser(req,urlDatabase)) {
     delete urlDatabase[req.params.shortURL];
-    res.redirect('/urls'); //redirect the client back to the url_index page
+    res.redirect('/urls');
   } else res.redirect('/invalid_delete');
 });
 
-app.post('/urls/:shortURL/edit', (req, res) => {//routing the edit action (when user edit longurl of a correspond shorturl via submit)
+app.post('/urls/:shortURL/edit', (req, res) => {
   if (isValidUser(req, urlDatabase)) {
     const newURL = req.body.updateURL;
     const shortURL = req.params.shortURL;
@@ -133,7 +129,7 @@ app.post('/urls/:shortURL/edit', (req, res) => {//routing the edit action (when 
   } else res.redirect('/invalid_edit');
 });
 
-app.post('/urls/:shortURL', (req, res) => { //when user click edit in index page
+app.post('/urls/:shortURL', (req, res) => {
   res.redirect(`/urls/${req.params.shortURL}`);
 });
 
