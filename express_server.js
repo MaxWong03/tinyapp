@@ -1,5 +1,5 @@
 const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession} = require('./constants');
-const {generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidShortURL} = require('./helperFunctions');
+const {generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL} = require('./helperFunctions');
 //server engine set up
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -67,19 +67,25 @@ app.get('/urls/new', (req, res) => {
 
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-  if (!invalidShortURL(shortURL, urlDatabase)) {
+  const userID = req.session.user_id;
+  const longURL = urlDatabase[shortURL].longURL;
+  if (invalidURL(shortURL, urlDatabase)) {
     const userID = req.session.user_id;
     let templateVars = { urls: urlDatabase, user: users[userID] };
     res.render('invalid_short_url', templateVars);
   }
-  const longURL = urlDatabase[shortURL].longURL;
-  const userID = req.session.user_id;
   let templateVars = { shortURL, longURL, user: users[userID] ,urlDatabase};
   res.render('urls_show', templateVars);
 });
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
+  const userID = req.session.user_id;
+  if (invalidURL(shortURL, urlDatabase)) {
+    const userID = req.session.user_id;
+    let templateVars = { urls: urlDatabase, user: users[userID] };
+    res.render('invalid_short_url', templateVars);
+  }
   const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
