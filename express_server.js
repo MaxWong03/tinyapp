@@ -1,5 +1,5 @@
 const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession} = require('./constants');
-const {generateRandomString, getUserByEmail, urlsForUser, isValidUser} = require('./helperFunctions');
+const {generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidShortURL} = require('./helperFunctions');
 //server engine set up
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -7,6 +7,8 @@ app.use(cookieSession({
   name: 'session',
   keys: ['key1']
 }));
+
+
 
 app.get('/', (req, res) => {
   const userID = req.session.user_id;
@@ -65,6 +67,11 @@ app.get('/urls/new', (req, res) => {
 
 app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
+  if (!invalidShortURL(shortURL, urlDatabase)) {
+    const userID = req.session.user_id;
+    let templateVars = { urls: urlDatabase, user: users[userID] };
+    res.render('invalid_short_url', templateVars);
+  }
   const longURL = urlDatabase[shortURL].longURL;
   const userID = req.session.user_id;
   let templateVars = { shortURL, longURL, user: users[userID] ,urlDatabase};
@@ -126,7 +133,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   } else res.redirect('/invalid_delete');
 });
 
-app.post('/urls/:shortURL/edit', (req, res) => {
+app.post('/urls/:shortURL', (req, res) => {
   if (isValidUser(req, urlDatabase)) {
     const newURL = req.body.updateURL;
     const shortURL = req.params.shortURL;
@@ -135,9 +142,7 @@ app.post('/urls/:shortURL/edit', (req, res) => {
   } else res.redirect('/invalid_edit');
 });
 
-app.post('/urls/:shortURL', (req, res) => {
-  res.redirect(`/urls/${req.params.shortURL}`);
-});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

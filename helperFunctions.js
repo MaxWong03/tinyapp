@@ -27,9 +27,16 @@ const isValidUser = (req, urlDatabase) => {
   return false;
 };
 
+const invalidShortURL = (url, urlDatabase) => {
+  for (let shortURL in urlDatabase) {
+    if (url === shortURL) return true;
+  }
+  return false;
+};
 module.exports = {
   generateRandomString,
   getUserByEmail,
   urlsForUser,
-  isValidUser
+  isValidUser,
+  invalidShortURL
 };
