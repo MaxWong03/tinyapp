@@ -18,9 +18,13 @@ const urlsForUser = (id, urlDatabase) => {
   return userURL;
 };
 
+const isLogIn = (req) => req.session.user_id ? true : false;
+
 const isValidUser = (req, urlDatabase) => {
   const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
+  console.log('urlDB:', urlDatabase);
+  console.log('shortURL', shortURL);
   const shortURLOwner = urlDatabase[shortURL].userID;
   if (userID === shortURLOwner) return true;
   return false;
@@ -89,5 +93,6 @@ module.exports = {
   redirectFromHome,
   getCredential,
   setCookieID,
-  logOutAndClean
+  logOutAndClean,
+  isLogIn
 };

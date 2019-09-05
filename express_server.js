@@ -1,5 +1,5 @@
 const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession } = require('./constants');
-const { generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL, renderHeader, redirectFromHome, getCredential, setCookieID, logOutAndClean } = require('./helperFunctions');
+const { generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL, renderHeader, redirectFromHome, getCredential, setCookieID, logOutAndClean,isLogIn } = require('./helperFunctions');
 /**
  * SERVER ENGINE SET UP
  */
@@ -22,7 +22,10 @@ app.get('/invalid_edit', (req, res) => renderHeader(req, res, urlDatabase, users
 
 app.get('/urls', (req, res) => renderHeader(req, res, urlsForUser(req.session.user_id, urlDatabase), users, 'urls_index'));
 
-app.get('/login', (req, res) => renderHeader(req, res, urlDatabase, users, 'login'));
+app.get('/login', (req, res) => {//this is what im fixing
+  if (!isLogIn(req)) renderHeader(req, res, urlDatabase, users, 'login');
+  else res.redirect('/urls');
+});
 
 app.get('/login_fail', (req, res) => renderHeader(req, res, urlDatabase, users, 'login_fail'));
 
@@ -54,7 +57,9 @@ app.get('/u/:shortURL', (req, res) => {
  */
 
 app.post('/urls', (req, res) => {
+  console.log('hello');
   const userID = req.session.user_id;
+  console.log(userID);
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
   urlDatabase[shortURL] = { longURL, userID };
@@ -96,7 +101,7 @@ app.post('/urls/:shortURL', (req, res) => {
     const shortURL = req.params.shortURL;
     urlDatabase[shortURL].longURL = newURL;
     res.redirect('/urls');
-  } else res.redirect('/invalid_edit');
+  } else renderHeader(req, res, urlDatabase, users, 'urls_show');
 });
 
 /**
