@@ -29,7 +29,10 @@ app.get('/login', (req, res) => {//this is what im fixing
 
 app.get('/login_fail', (req, res) => renderHeader(req, res, urlDatabase, users, 'login_fail'));
 
-app.get('/register', (req, res) => renderHeader(req, res, urlDatabase, users, 'register'));
+app.get('/register', (req, res) => {
+  if (!isLogIn(req)) renderHeader(req, res, urlDatabase, users, 'register');
+  else res.redirect('/urls');
+});
 
 app.get('/reg_fail', (req, res) => renderHeader(req, res, urlDatabase, users, 'reg_fail'));
 
@@ -57,9 +60,7 @@ app.get('/u/:shortURL', (req, res) => {
  */
 
 app.post('/urls', (req, res) => {
-  console.log('hello');
   const userID = req.session.user_id;
-  console.log(userID);
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
   urlDatabase[shortURL] = { longURL, userID };
