@@ -18,7 +18,6 @@ const urlsForUser = (id, urlDatabase) => {
   return userURL;
 };
 
-//Good to go for refactor
 const isValidUser = (req, urlDatabase) => {
   const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
@@ -40,11 +39,36 @@ const renderHeader = (req, res, urlDB, userDB, version) => {
   res.render(`${version}`, templateVars);
 };
 
+const redirectFromHome = (req, res) => {
+  const userID = req.session.user_id;
+  if (userID) res.redirect('/urls');
+  else res.redirect('/login');
+};
+
+const getCredential = (req) => {
+  return { email: req.body.email, password: req.body.password };
+};
+
+const setCookieID = (req, res, id) => {
+  // eslint-disable-next-line camelcase
+  req.session.user_id = id;
+  res.redirect('urls');
+};
+
+const logOutAndClean = (res) => {
+  res.clearCookie('session');
+  res.redirect('urls');
+};
+
 module.exports = {
   generateRandomString,
   getUserByEmail,
   urlsForUser,
   isValidUser,
   invalidURL,
-  renderHeader
+  renderHeader,
+  redirectFromHome,
+  getCredential,
+  setCookieID,
+  logOutAndClean
 };
