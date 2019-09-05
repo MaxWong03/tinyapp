@@ -13,6 +13,14 @@ TinyApp is a `full stack` web application built with `Node` and `Express` that *
 ### Edit / Delete URL
 !["editDelete"](https://github.com/MaxWong03/tinyapp/blob/master/docs/editDelete.gif)
 
+## Feature
+* Users can `register` a `new account` 
+* Users can `log in` with `email` and `password`
+* Users can `log out` of their `account`
+* Users can `create` new shorten `URL`
+* Users can `edit` and `delete` **exisiting** URL
+* `Anyone` can `access` shorten `URL`
+
 ## Dependencies
 
 - Node.js
