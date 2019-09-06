@@ -4,6 +4,8 @@
 
 * The server is implemented in RESTful conventions
 
+* Analytics Features are implemented with custom MiddleWare
+
 # Final Product
 
 ### User Authentication
@@ -16,8 +18,7 @@
 !["editDelete"](https://github.com/MaxWong03/tinyapp/blob/master/docs/editDelete.gif)
 
 ### Analytics
-* Analytics are done in custom MiddleWare
-!["analytics"]()
+!["analytics"](https://github.com/MaxWong03/tinyapp/blob/master/docs/Analytics.gif)
 
 ## General Features
 1) Users can `register` a `new account` 
@@ -25,7 +26,7 @@
 3) Users can `log out` of their `account`
 4) Users can `create` new shorten `URL`
 5) Users can `edit` and `delete` **exisiting** URL
-7) `Anyone` can `access` shorten `URL`
+6) `Anyone` can `access` shorten `URL`
 
 # Analytics Features
 1) Users can `keep track` of the `amount of times` a given `short URL` is `visited` 
