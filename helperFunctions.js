@@ -62,6 +62,7 @@ const logOutAndClean = (req, res) => {
   res.redirect('urls');
 };
 
+
 const countTotalVis = (urlDatabase, users) => {
   const middleWare = (req, res, next) => {
     if (invalidURL(req.params.shortURL, urlDatabase)) {
@@ -71,6 +72,7 @@ const countTotalVis = (urlDatabase, users) => {
       const unqiueVisArr = urlDatabase[req.params.shortURL].uniqueVis;
       const userID = req.session.user_id;
       urlDatabase[req.params.shortURL].totalVis++;
+      urlDatabase[req.params.shortURL].stamps.push({timeStamp: new Date().toUTCString(), userID: !userID ? 'Non TinyApp User' : userID});
       if (!unqiueVisArr.length) unqiueVisArr.push(userID);
       else {
         if (unqiueVisArr.indexOf(userID) === -1) unqiueVisArr.push(userID);

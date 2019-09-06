@@ -10,6 +10,9 @@ app.use(cookieSession({
   keys: ['key1']
 }));
 app.use(methodOverride('_method'));
+/**
+ * countTotalVis tracks the Total Visitor Count, the Unique Visitor Count, and the Time stamps of each visitior everytime the short URL is visited
+ */
 app.use('/u/:shortURL', countTotalVis(urlDatabase, users));
 /**
  * ALL GET REQUEST ROUTES
@@ -21,10 +24,7 @@ app.get('/invalid_delete', (req, res) => renderHeader(req, res, urlDatabase, use
 
 app.get('/invalid_edit', (req, res) => renderHeader(req, res, urlDatabase, users, 'invalid_edit'));
 
-app.get('/urls', (req, res) => {
-  console.log(urlsForUser(req.session.user_id, urlDatabase));
-  renderHeader(req, res, urlsForUser(req.session.user_id, urlDatabase), users, 'urls_index');
-});
+app.get('/urls', (req, res) => renderHeader(req, res, urlsForUser(req.session.user_id, urlDatabase), users, 'urls_index'));
 
 app.get('/login', (req, res) => {//this is what im fixing
   if (!isLogIn(req)) renderHeader(req, res, urlDatabase, users, 'login');
@@ -61,7 +61,7 @@ app.post('/urls', (req, res) => {
   const userID = req.session.user_id;
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = { longURL, userID, totalVis: 0, uniqueVis: [] }; //<< this is where im working at 
+  urlDatabase[shortURL] = { longURL, userID, totalVis: 0, uniqueVis: [], stamps: [] }; //<< this is where im working at 
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -95,9 +95,9 @@ app.delete('/urls/:shortURL', (req, res) => {
 });
 
 app.put('/urls/:shortURL', (req, res) => {
+  const newURL = req.body.updateURL;
+  const shortURL = req.params.shortURL;
   if (isValidUser(req, urlDatabase)) {
-    const newURL = req.body.updateURL;
-    const shortURL = req.params.shortURL;
     urlDatabase[shortURL].longURL = newURL;
     res.redirect('/urls');
   } else renderHeader(req, res, urlDatabase, users, 'urls_show');

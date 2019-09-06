@@ -15,4 +15,25 @@
       </div>
     </form>
   </div>
+  <main style="margin: 1em;"></main>
+<h3 class="text-center font-weight-bold bg-info text-white mt-4 py-3 ">👥Visitor Track</h3>
+<table class="table table-info text-white">
+  <thead>
+    <tr class="bg-info">
+      <th class="h4 text-center font-weight-bold pt-3" scope="col">🕰Time Stamp</th>
+      <th class="h4 text-center font-weight-bold" scope="col">Visitor 🆔</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(let url in urls) { %>
+      <% for(let stamp of urls[url].stamps) { %>
+      <tr class="bg-info">
+        <td class="font-weight-bold text-center"><%= stamp.timeStamp %></td>
+        <td class="font-weight-bold text-center"><%= stamp.userID %></td>
+      <% } %>
+    </tr>
+    <% } %>
+  </tbody>
+</table>
+</main>
 </div>

@@ -20,7 +20,7 @@
   <tbody>
     <% for(let url in urls) { %>
     <tr class="bg-info">
-      <td class="font-weight-bold text-center"><%= url %></td>
+      <td class="font-weight-bold text-center"><a class="text-danger" href="/u/<%= url %>"><%= url %></a></td>
       <td class="font-weight-bold text-center"><%= urls[url].longURL%></td>
       <td class="font-weight-bold text-center">Total:<%= urls[url].totalVis%> Unique:<%= urls[url].uniqueVis.length%></td>
       <td>

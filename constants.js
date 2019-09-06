@@ -36,5 +36,5 @@ module.exports = {
   users,
   bcrypt,
   cookieSession,
-  methodOverride
+  methodOverride,
 };
