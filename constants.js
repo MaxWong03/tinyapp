@@ -6,6 +6,7 @@ const PORT = 8080;
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+const methodOverride = require('method-override');
 
 const urlDatabase = {
   // "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "userRandomID"},
@@ -34,5 +35,6 @@ module.exports = {
   urlDatabase,
   users,
   bcrypt,
-  cookieSession
+  cookieSession,
+  methodOverride
 };

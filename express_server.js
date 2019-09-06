@@ -1,5 +1,5 @@
-const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession } = require('./constants');
-const { generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL, renderHeader, redirectFromHome, getCredential, setCookieID, logOutAndClean,isLogIn } = require('./helperFunctions');
+const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession, methodOverride } = require('./constants');
+const { generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL, renderHeader, redirectFromHome, getCredential, setCookieID, logOutAndClean, isLogIn } = require('./helperFunctions');
 /**
  * SERVER ENGINE SET UP
  */
@@ -9,7 +9,7 @@ app.use(cookieSession({
   name: 'session',
   keys: ['key1']
 }));
-
+app.use(methodOverride('_method'));
 /**
  * ALL GET REQUEST ROUTES
  */
@@ -89,14 +89,14 @@ app.post('/register', (req, res) => {
   }
 });
 
-app.post('/urls/:shortURL/delete', (req, res) => {
+app.delete('/urls/:shortURL', (req, res) => {
   if (isValidUser(req, urlDatabase)) {
     delete urlDatabase[req.params.shortURL];
     res.redirect('/urls');
   } else res.redirect('/invalid_delete');
 });
 
-app.post('/urls/:shortURL', (req, res) => {
+app.put('/urls/:shortURL', (req, res) => {
   if (isValidUser(req, urlDatabase)) {
     const newURL = req.body.updateURL;
     const shortURL = req.params.shortURL;

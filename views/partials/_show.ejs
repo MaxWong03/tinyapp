@@ -6,7 +6,7 @@
   </div>
   <div class="">
     <h2 class="text-info mt-4">Edit</h2>
-    <form class="form-inline justify-content-center" method="POST" action="/urls/<%= req.params.shortURL %>">
+    <form class="form-inline justify-content-center" method="POST" action="/urls/<%= req.params.shortURL %>?_method=PUT">
       <div class="form-group mb-2">
         <label class="font-weight-bold text-info" for="updateURL">New URL:</label>
         <input class="form-control" type="text" name="updateURL" placeholder="http://"
