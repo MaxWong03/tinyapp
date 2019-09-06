@@ -15,13 +15,22 @@
 ### Edit / Delete URL
 !["editDelete"](https://github.com/MaxWong03/tinyapp/blob/master/docs/editDelete.gif)
 
-## Feature
+### Analytics
+* Analytics are done in custom MiddleWare
+!["analytics"]()
+
+## General Features
 1) Users can `register` a `new account` 
 2) Users can `log in` with `email` and `password`
 3) Users can `log out` of their `account`
 4) Users can `create` new shorten `URL`
 5) Users can `edit` and `delete` **exisiting** URL
-6) `Anyone` can `access` shorten `URL`
+7) `Anyone` can `access` shorten `URL`
+
+# Analytics Features
+1) Users can `keep track` of the `amount of times` a given `short URL` is `visited` 
+2) Users can `keep track` of the `amount` of `unique` visitors of a given `short URL`
+3) Users can see the `timestamp (GMT)` and `visitorID` of a given `short URL`
 
 ## Dependencies
 
@@ -32,6 +41,10 @@
 - body-parser
 - cookie-session
 - method-override
+
+## Known Issues
+1) This app does not utilize any database 🙃
+2) Users cookies are used to keep track of URL's visit timestamp and displayed in the edit page (**Possible Security Breach**) 😫
 
 ## Getting Started
 
