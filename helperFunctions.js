@@ -13,7 +13,7 @@ const urlsForUser = (id, urlDatabase) => {
   const userURL = {};
   for (let shortURL in urlDatabase) {
     const shortURLInfo = urlDatabase[shortURL];
-    if (shortURLInfo.userID === id) userURL[shortURL] = {longURL: shortURLInfo.longURL, totalVis: shortURLInfo.totalVis};
+    if (shortURLInfo.userID === id) userURL[shortURL] = {longURL: shortURLInfo.longURL, totalVis: shortURLInfo.totalVis, uniqueVis: shortURLInfo.uniqueVis};
   }
   return userURL;
 };
@@ -68,7 +68,13 @@ const countTotalVis = (urlDatabase, users) => {
       renderHeader(req, res, urlDatabase, users, 'invalid_short_url');
       next();
     } else {
+      const unqiueVisArr = urlDatabase[req.params.shortURL].uniqueVis;
+      const userID = req.session.user_id;
       urlDatabase[req.params.shortURL].totalVis++;
+      if (!unqiueVisArr.length) unqiueVisArr.push(userID);
+      else {
+        if (unqiueVisArr.indexOf(userID) === -1) unqiueVisArr.push(userID);
+      }
       res.redirect(urlDatabase[req.params.shortURL].longURL);
       next();
     }

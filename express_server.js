@@ -21,7 +21,10 @@ app.get('/invalid_delete', (req, res) => renderHeader(req, res, urlDatabase, use
 
 app.get('/invalid_edit', (req, res) => renderHeader(req, res, urlDatabase, users, 'invalid_edit'));
 
-app.get('/urls', (req, res) => renderHeader(req, res, urlsForUser(req.session.user_id, urlDatabase), users, 'urls_index'));
+app.get('/urls', (req, res) => {
+  console.log(urlsForUser(req.session.user_id, urlDatabase));
+  renderHeader(req, res, urlsForUser(req.session.user_id, urlDatabase), users, 'urls_index');
+});
 
 app.get('/login', (req, res) => {//this is what im fixing
   if (!isLogIn(req)) renderHeader(req, res, urlDatabase, users, 'login');
@@ -58,7 +61,7 @@ app.post('/urls', (req, res) => {
   const userID = req.session.user_id;
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = { longURL, userID, totalVis: 0 }; //<< this is where im working at 
+  urlDatabase[shortURL] = { longURL, userID, totalVis: 0, uniqueVis: [] }; //<< this is where im working at 
   res.redirect(`/urls/${shortURL}`);
 });
 
