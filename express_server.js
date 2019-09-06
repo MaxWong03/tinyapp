@@ -1,5 +1,5 @@
 const { bodyParser, app, PORT, urlDatabase, users, bcrypt, cookieSession, methodOverride } = require('./constants');
-const { generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL, renderHeader, redirectFromHome, getCredential, setCookieID, logOutAndClean, isLogIn } = require('./helperFunctions');
+const { generateRandomString, getUserByEmail, urlsForUser, isValidUser, invalidURL, renderHeader, redirectFromHome, getCredential, setCookieID, logOutAndClean, isLogIn, countTotalVis } = require('./helperFunctions');
 /**
  * SERVER ENGINE SET UP
  */
@@ -10,6 +10,7 @@ app.use(cookieSession({
   keys: ['key1']
 }));
 app.use(methodOverride('_method'));
+app.use('/u/:shortURL', countTotalVis(urlDatabase, users));
 /**
  * ALL GET REQUEST ROUTES
  */
@@ -49,12 +50,6 @@ app.get('/urls/:shortURL', (req, res) => {
   else renderHeader(req, res, urlDatabase, users, 'urls_show');
 });
 
-app.get('/u/:shortURL', (req, res) => {
-  const shortURL = req.params.shortURL;
-  if (invalidURL(shortURL, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_short_url');
-  else res.redirect(urlDatabase[shortURL].longURL);
-});
-
 /**
  * ALL POST REQUEST ROUTES
  */
@@ -63,7 +58,7 @@ app.post('/urls', (req, res) => {
   const userID = req.session.user_id;
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = { longURL, userID };
+  urlDatabase[shortURL] = { longURL, userID, totalVis: 0 }; //<< this is where im working at 
   res.redirect(`/urls/${shortURL}`);
 });
 

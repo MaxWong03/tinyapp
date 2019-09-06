@@ -12,6 +12,7 @@
     <tr class="bg-info">
       <th class="h4 text-center font-weight-bold pt-3" scope="col">🌿Short URL</th>
       <th class="h4 text-center font-weight-bold" scope="col">🌲Long URL</th>
+      <th class="h4 text-center font-weight-bold" scope="col">👥Total Visitor Count</th>
       <th class="h4 text-center font-weight-bold" scope="col">🌚Edit</th>
       <th class="h4 text-center font-weight-bold" scope="col">😱Delete</th>
     </tr>
@@ -20,7 +21,8 @@
     <% for(let url in urls) { %>
     <tr class="bg-info">
       <td class="font-weight-bold text-center"><%= url %></td>
-      <td class="font-weight-bold text-center"><%= urls[url] %></td>
+      <td class="font-weight-bold text-center"><%= urls[url].longURL%></td>
+      <td class="font-weight-bold text-center"><%= urls[url].totalVis%></td>
       <td>
         <form class="text-center" method="get" action="/urls/<%= url %>">
           <button type="submit" class="btn btn-outline-light font-weight-bold">Edit</button>

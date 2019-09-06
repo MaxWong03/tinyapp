@@ -13,7 +13,7 @@ const urlsForUser = (id, urlDatabase) => {
   const userURL = {};
   for (let shortURL in urlDatabase) {
     const shortURLInfo = urlDatabase[shortURL];
-    if (shortURLInfo.userID === id) userURL[shortURL] = shortURLInfo.longURL;
+    if (shortURLInfo.userID === id) userURL[shortURL] = {longURL: shortURLInfo.longURL, totalVis: shortURLInfo.totalVis};
   }
   return userURL;
 };
@@ -62,6 +62,20 @@ const logOutAndClean = (req, res) => {
   res.redirect('urls');
 };
 
+const countTotalVis = (urlDatabase, users) => {
+  const middleWare = (req, res, next) => {
+    if (invalidURL(req.params.shortURL, urlDatabase)) {
+      renderHeader(req, res, urlDatabase, users, 'invalid_short_url');
+      next();
+    } else {
+      urlDatabase[req.params.shortURL].totalVis++;
+      res.redirect(urlDatabase[req.params.shortURL].longURL);
+      next();
+    }
+  };
+  return middleWare;
+};
+
 module.exports = {
   generateRandomString,
   getUserByEmail,
@@ -73,5 +87,6 @@ module.exports = {
   getCredential,
   setCookieID,
   logOutAndClean,
-  isLogIn
+  isLogIn,
+  countTotalVis
 };
