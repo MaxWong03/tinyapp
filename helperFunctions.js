@@ -62,25 +62,6 @@ const logOutAndClean = (req, res) => {
   res.redirect('urls');
 };
 
-// const handleShortURL = (urlDatabase, users) => {
-
-//   const middleWare = (req, res, next) => {
-//     //get Route
-//     const shortURL = req.params.shortURL;
-//     if (invalidURL(shortURL, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_short_url');
-//     else if (!isValidUser(req, urlDatabase)) renderHeader(req, res, urlDatabase, users, 'invalid_edit');
-//     else renderHeader(req, res, urlDatabase, users, 'urls_show');
-//     //post route
-//     if (isValidUser(req, urlDatabase)) {
-//       const newURL = req.body.updateURL;
-//       const shortURL = req.params.shortURL;
-//       urlDatabase[shortURL].longURL = newURL;
-//       res.redirect('/urls');
-//     } else res.redirect('/invalid_edit');
-//   };
-//   return middleWare;
-// };
-
 module.exports = {
   generateRandomString,
   getUserByEmail,
