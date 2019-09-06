@@ -1,6 +1,8 @@
 # TinyApp Project
 
-TinyApp is a `full stack` web application built with `Node` and `Express` that **allows users to shorten long URLs** (à la bit.ly).
+* TinyApp is a `full stack` web application built with `Node` and `Express` that **allows users to shorten long URLs** (à la bit.ly).
+
+* The server is implemented in RESTful conventions
 
 # Final Product
 
@@ -14,12 +16,12 @@ TinyApp is a `full stack` web application built with `Node` and `Express` that *
 !["editDelete"](https://github.com/MaxWong03/tinyapp/blob/master/docs/editDelete.gif)
 
 ## Feature
-* Users can `register` a `new account` 
-* Users can `log in` with `email` and `password`
-* Users can `log out` of their `account`
-* Users can `create` new shorten `URL`
-* Users can `edit` and `delete` **exisiting** URL
-* `Anyone` can `access` shorten `URL`
+1) Users can `register` a `new account` 
+2) Users can `log in` with `email` and `password`
+3) Users can `log out` of their `account`
+4) Users can `create` new shorten `URL`
+5) Users can `edit` and `delete` **exisiting** URL
+6) `Anyone` can `access` shorten `URL`
 
 ## Dependencies
 
@@ -29,6 +31,7 @@ TinyApp is a `full stack` web application built with `Node` and `Express` that *
 - bcrypt
 - body-parser
 - cookie-session
+- method-override
 
 ## Getting Started
 
